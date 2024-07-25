@@ -35,7 +35,7 @@ const imageSchema = new mongoose.Schema({
   data: Buffer,
   contentType: String,
   caption: String,
-  time: { type: Date, default: Date.now }
+  time: { type: Date, default: Date.now },
 });
 
 const Image = mongoose.model('Image', imageSchema);
@@ -49,7 +49,12 @@ io.on('connection', (socket) => {
     const newImage = new Image({
       data: Buffer.from(data.image, 'base64'),
       contentType: 'image/jpeg',
-      caption: data.caption
+      caption: data.caption,
+      avatar: data.avatar,
+      name: data.name,
+      likes: data.likes,
+      comments: data.comments,
+      isFavorite: data.isFavorite,
     });
 
     try {
@@ -61,11 +66,16 @@ io.on('connection', (socket) => {
       const filePath = path.join(uploadsDir, fileName);
       fs.writeFileSync(filePath, newImage.data);
 
-      // Emit the image and caption data along with the timestamp to all connected clients
+      // Emit the image and caption data along with other details to all connected clients
       io.emit('new_image', {
         image: data.image,
         caption: data.caption,
-        time: savedImage.time
+        time: savedImage.time,
+        avatar: data.avatar,
+        name: data.name,
+        likes: data.likes,
+        comments: data.comments,
+        isFavorite: data.isFavorite,
       });
     } catch (error) {
       console.error('Error saving image and caption to MongoDB:', error);
@@ -94,6 +104,7 @@ app.get('/server-ip', (req, res) => {
   res.json({ ip: ipAddresses[0] || 'localhost' });
 });
 
-server.listen(3000, () => {
+server.listen(3000, '0.0.0.0', () => {
   console.log('listening on *:3000');
 });
+
