@@ -19,10 +19,7 @@ if (!fs.existsSync(uploadsDir)) {
 }
 
 // Connect to MongoDB
-mongoose.connect(process.env.MONGODB_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-});
+mongoose.connect(process.env.MONGODB_URI);
 
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
@@ -36,6 +33,11 @@ const imageSchema = new mongoose.Schema({
   contentType: String,
   caption: String,
   time: { type: Date, default: Date.now },
+  avatar: String,
+  name: String,
+  likes: Number,
+  comments: [String],
+  isFavorite: Boolean,
 });
 
 const Image = mongoose.model('Image', imageSchema);
@@ -104,7 +106,6 @@ app.get('/server-ip', (req, res) => {
   res.json({ ip: ipAddresses[0] || 'localhost' });
 });
 
-server.listen(3000, '0.0.0.0', () => {
-  console.log('listening on *:3000');
+server.listen(8080, () => {
+  console.log('Server listening on port 8080');
 });
-
