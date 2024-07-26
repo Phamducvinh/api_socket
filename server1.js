@@ -20,8 +20,8 @@ if (!fs.existsSync(uploadsDir)) {
 
 // Connect to MongoDB
 mongoose.connect(process.env.MONGODB_URI, {
-  
-  ssl: true,
+  tls: true,
+  tlsAllowInvalidCertificates: true,
 }).catch(error => console.error('Error connecting to MongoDB:', error));
 
 const db = mongoose.connection;
