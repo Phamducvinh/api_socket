@@ -23,7 +23,6 @@ mongoose.connect(process.env.MONGODB_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
   ssl: true,
-  sslValidate: true,
   tlsAllowInvalidCertificates: true, // Chỉ sử dụng khi phát triển
 }).catch(error => console.error('Error connecting to MongoDB:', error));
 
